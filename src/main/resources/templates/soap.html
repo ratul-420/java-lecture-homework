@@ -47,6 +47,33 @@
                         </tbody>
                     </table>
                 </div>
+                <div th:if="${rows}" style="max-width:900px;">
+                    <canvas id="rateChart"></canvas>
+                </div>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+                <script th:if="${rows}" th:inline="javascript">
+                    const labels = /*[[${labels}]]*/ [];
+                    const values = /*[[${values}]]*/ [];
+                    const currency = /*[[${selected}]]*/ '';
+                    new Chart(document.getElementById('rateChart'), {
+                        type: 'line',
+                        data: {
+                            labels: labels,
+                            datasets: [{
+                                label: 'HUF per 1 ' + currency,
+                                data: values,
+                                borderColor: '#f56a6a',
+                                backgroundColor: 'rgba(245,106,106,0.15)',
+                                tension: 0.2,
+                                fill: true
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: { y: { title: { display: true, text: 'HUF' } } }
+                        }
+                    });
+                </script>
             </section>
 
             <footer th:replace="~{fragments/layout :: footer}"></footer>

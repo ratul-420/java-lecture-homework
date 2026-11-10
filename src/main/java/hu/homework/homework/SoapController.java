@@ -1,5 +1,6 @@
 package hu.homework.homework;
 
+import java.util.Comparator;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,7 +55,10 @@ public class SoapController {
                     if (rows.isEmpty()) {
                         model.addAttribute("error", "No data for this period (weekends and holidays have no rates).");
                     } else {
+                        rows.sort(Comparator.comparing(RateRow::date));
                         model.addAttribute("rows", rows);
+                        model.addAttribute("labels", rows.stream().map(RateRow::date).toList());
+                        model.addAttribute("values", rows.stream().map(RateRow::rate).toList());
                     }
                 }
             } catch (Exception e) {
