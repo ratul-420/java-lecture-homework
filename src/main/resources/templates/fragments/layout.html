@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title)">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title th:text="${title}">Title</title>
+    <link rel="stylesheet" href="/assets/css/main.css" />
+</head>
+
+<body>
+
+<div id="sidebar" th:fragment="sidebar">
+    <div class="inner">
+        <nav id="menu">
+            <header class="major">
+                <h2>Menu</h2>
+            </header>
+            <ul>
+                <li><a href="/">Home</a></li>
+                <li><a href="/soap">SOAP</a></li>
+                <li>
+                    <span class="opener">Forex</span>
+                    <ul>
+                        <li><a href="/forex/account">Account</a></li>
+                        <li><a href="/forex/actprice">ActPrice</a></li>
+                        <li><a href="/forex/histprice">HistPrice</a></li>
+                        <li><a href="/forex/open">Open</a></li>
+                        <li><a href="/forex/pos">Pos</a></li>
+                        <li><a href="/forex/close">Close</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+<footer th:fragment="footer" style="margin-top:3em; padding:1.5em 0; border-top:1px solid #ddd; font-size:0.9em;">
+    <p>
+        Created by: Fahim Muntashir Ratul (H1566N) &amp; Md Aminul Islam (PQFBDZ)<br />
+        Design: <a href="https://html5up.net">HTML5 UP</a> (Editorial)
+    </p>
+</footer>
+
+<th:block th:fragment="scripts">
+    <script src="/assets/js/jquery.min.js"></script>
+    <script src="/assets/js/browser.min.js"></script>
+    <script src="/assets/js/breakpoints.min.js"></script>
+    <script src="/assets/js/util.js"></script>
+    <script src="/assets/js/main.js"></script>
+</th:block>
+
+</body>
+</html>
