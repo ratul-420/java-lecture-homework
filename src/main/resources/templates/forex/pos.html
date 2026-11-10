@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex - Open positions')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <header id="header"><a href="/" class="logo"><strong>FXWorks</strong> Trading Solutions</a></header>
+
+            <section>
+                <header class="major"><h2>Open positions</h2></header>
+
+                <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+
+                <p th:if="${rows != null and #lists.isEmpty(rows)}">No open positions.</p>
+
+                <div class="table-wrapper" th:if="${rows != null and !#lists.isEmpty(rows)}">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Trade ID</th><th>Instrument</th><th>Open time</th>
+                            <th>Units</th><th>Price</th><th>Unrealized P/L</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="r : ${rows}">
+                            <td th:text="${r.id()}"></td>
+                            <td th:text="${r.instrument()}"></td>
+                            <td th:text="${r.openTime()}"></td>
+                            <td th:text="${r.units()}"></td>
+                            <td th:text="${r.price()}"></td>
+                            <td th:text="${r.pl()}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <footer th:replace="~{fragments/layout :: footer}"></footer>
+        </div>
+    </div>
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
