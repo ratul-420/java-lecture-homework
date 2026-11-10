@@ -1,5 +1,6 @@
 package hu.homework.homework;
 
+import java.util.List;
 import com.oanda.v20.account.AccountID;
 
 import java.io.FileInputStream;
@@ -10,6 +11,8 @@ public class Config {
     private Config() {}
 
     public static final String URL = "https://api-fxpractice.oanda.com";
+    public static final List<String> INSTRUMENTS =
+            List.of("EUR_USD", "USD_CHF", "GBP_USD", "USD_JPY", "AUD_USD", "EUR_GBP");
     public static final AccountID ACCOUNTID;
     public static final String TOKEN;
 
