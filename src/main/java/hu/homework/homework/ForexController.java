@@ -1,5 +1,7 @@
 package hu.homework.homework;
 
+import com.oanda.v20.trade.TradeCloseRequest;
+import com.oanda.v20.trade.TradeSpecifier;
 import com.oanda.v20.order.MarketOrderRequest;
 import com.oanda.v20.order.OrderCreateRequest;
 import com.oanda.v20.order.OrderCreateResponse;
@@ -106,5 +108,30 @@ public class ForexController {
             model.addAttribute("error", "Could not open position: " + e.getMessage());
         }
         return "forex/open";
+    }
+    @GetMapping("/close")
+    public String closeForm() {
+        return "forex/close";
+    }
+
+    @PostMapping("/close")
+    public String closePosition(@RequestParam long tradeId, Model model) {
+        if (tradeId <= 0) {
+            model.addAttribute("error", "Enter a valid Trade ID.");
+            return "forex/close";
+        }
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            var response = ctx.trade.close(new TradeCloseRequest(Config.ACCOUNTID, new TradeSpecifier(String.valueOf(tradeId))));
+            var fill = response.getOrderFillTransaction();
+            String text = "Closed trade " + tradeId + " at the market price.";
+            if (fill != null) {
+                text += " Close price: " + fill.getPrice() + ", realized P/L: " + fill.getPl();
+            }
+            model.addAttribute("result", text);
+        } catch (Exception e) {
+            model.addAttribute("error", "Could not close trade " + tradeId + ": " + e.getMessage());
+        }
+        return "forex/close";
     }
 }
