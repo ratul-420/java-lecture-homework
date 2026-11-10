@@ -1,5 +1,6 @@
 package hu.homework.homework;
 
+import com.oanda.v20.trade.Trade;
 import com.oanda.v20.Context;
 import com.oanda.v20.instrument.Candlestick;
 import com.oanda.v20.instrument.CandlestickGranularity;
@@ -30,6 +31,8 @@ public class ForexDataController {
     private static final List<String> GRANULARITY_NAMES = List.of("M1", "H1", "D", "W", "M");
 
     public record PriceRow(String time, String close) {}
+    public record PosRow(String id, String instrument, String openTime,
+                         String units, String price, String pl) {}
 
     @GetMapping("/histprice")
     public String histPrice(@RequestParam(required = false) String instrument,
@@ -67,5 +70,27 @@ public class ForexDataController {
             }
         }
         return "forex/histprice";
+    }
+    @GetMapping("/pos")
+    public String pos(Model model) {
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            List<Trade> trades = ctx.trade.listOpen(Config.ACCOUNTID).getTrades();
+
+            List<PosRow> rows = new ArrayList<>();
+            for (Trade trade : trades) {
+                rows.add(new PosRow(
+                        String.valueOf(trade.getId()),
+                        String.valueOf(trade.getInstrument()),
+                        String.valueOf(trade.getOpenTime()),
+                        String.valueOf(trade.getCurrentUnits()),
+                        String.valueOf(trade.getPrice()),
+                        String.valueOf(trade.getUnrealizedPL())));
+            }
+            model.addAttribute("rows", rows);
+        } catch (Exception e) {
+            model.addAttribute("error", "Could not read open positions: " + e.getMessage());
+        }
+        return "forex/pos";
     }
 }
