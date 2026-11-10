@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('SOAP - MNB exchange rates')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <header id="header"><a href="/" class="logo"><strong>FXWorks</strong> Trading Solutions</a></header>
+
+            <section>
+                <header class="major"><h2>MNB exchange rates</h2></header>
+
+                <form method="get" action="/soap">
+                    <div class="fields">
+                        <div class="field third">
+                            <label for="currency">Currency</label>
+                            <select name="currency" id="currency">
+                                <option th:each="c : ${currencies}" th:value="${c}" th:text="${c}"
+                                        th:selected="${c == selected}"></option>
+                            </select>
+                        </div>
+                        <div class="field third">
+                            <label for="start">Start date</label>
+                            <input type="date" name="start" id="start" th:value="${start}" />
+                        </div>
+                        <div class="field third">
+                            <label for="end">End date</label>
+                            <input type="date" name="end" id="end" th:value="${end}" />
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Get rates" class="primary" /></li>
+                    </ul>
+                </form>
+
+                <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+            </section>
+
+            <footer th:replace="~{fragments/layout :: footer}"></footer>
+        </div>
+    </div>
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
