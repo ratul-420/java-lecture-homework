@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex - Account')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <header id="header"><a href="/" class="logo"><strong>FXWorks</strong> Trading Solutions</a></header>
+
+            <section>
+                <header class="major"><h2>Forex account</h2></header>
+                <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+                <div class="table-wrapper" th:if="${rows}">
+                    <table>
+                        <tbody>
+                        <tr th:each="r : ${rows}">
+                            <td><strong th:text="${r.key}"></strong></td>
+                            <td th:text="${r.value}"></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <footer th:replace="~{fragments/layout :: footer}"></footer>
+        </div>
+    </div>
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
