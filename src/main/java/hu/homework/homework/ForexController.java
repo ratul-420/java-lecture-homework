@@ -1,5 +1,10 @@
 package hu.homework.homework;
 
+import com.oanda.v20.order.MarketOrderRequest;
+import com.oanda.v20.order.OrderCreateRequest;
+import com.oanda.v20.order.OrderCreateResponse;
+import com.oanda.v20.primitives.InstrumentName;
+import org.springframework.web.bind.annotation.PostMapping;
 import com.oanda.v20.Context;
 import com.oanda.v20.account.AccountSummary;
 import com.oanda.v20.pricing.ClientPrice;
@@ -61,5 +66,45 @@ public class ForexController {
             }
         }
         return "forex/actprice";
+    }
+    @GetMapping("/open")
+    public String openForm(Model model) {
+        model.addAttribute("instruments", Config.INSTRUMENTS);
+        return "forex/open";
+    }
+
+    @PostMapping("/open")
+    public String openPosition(@RequestParam String instrument, @RequestParam int units, Model model) {
+        model.addAttribute("instruments", Config.INSTRUMENTS);
+        model.addAttribute("selected", instrument);
+
+        if (units == 0 || !Config.INSTRUMENTS.contains(instrument)) {
+            model.addAttribute("error", "Choose an instrument and a non-zero quantity.");
+            return "forex/open";
+        }
+        try {
+            Context ctx = new Context(Config.URL, Config.TOKEN);
+            OrderCreateRequest request = new OrderCreateRequest(Config.ACCOUNTID);
+            MarketOrderRequest order = new MarketOrderRequest();
+            order.setInstrument(new InstrumentName(instrument));
+            order.setUnits(units);
+            request.setOrder(order);
+
+            OrderCreateResponse response = ctx.order.create(request);
+            var fill = response.getOrderFillTransaction();
+            if (fill == null) {
+                model.addAttribute("error", "The order was not filled (market closed or order rejected).");
+            } else {
+                String direction = units > 0 ? "LONG" : "SHORT";
+                String tradeId = fill.getTradeOpened() != null
+                        ? String.valueOf(fill.getTradeOpened().getTradeID())
+                        : "none (an existing trade was reduced or closed)";
+                model.addAttribute("result", "Opened " + direction + " " + Math.abs(units) + " " + instrument
+                        + " at price " + fill.getPrice() + ". Trade ID: " + tradeId);
+            }
+        } catch (Exception e) {
+            model.addAttribute("error", "Could not open position: " + e.getMessage());
+        }
+        return "forex/open";
     }
 }

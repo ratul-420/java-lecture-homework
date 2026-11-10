@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Forex - Open position')}"></head>
+<body class="is-preload">
+<div id="wrapper">
+    <div id="main">
+        <div class="inner">
+            <header id="header"><a href="/" class="logo"><strong>FXWorks</strong> Trading Solutions</a></header>
+
+            <section>
+                <header class="major"><h2>Open position</h2></header>
+                <p>Positive quantity = Long, negative quantity = Short. The position opens at the market price.</p>
+
+                <form method="post" action="/forex/open">
+                    <div class="fields">
+                        <div class="field half">
+                            <label>Instrument</label>
+                            <select name="instrument">
+                                <option th:each="i : ${instruments}" th:value="${i}" th:text="${i}"
+                                        th:selected="${i == selected}"></option>
+                            </select>
+                        </div>
+                        <div class="field half">
+                            <label>Quantity</label>
+                            <input type="number" name="units" value="5" min="-100" max="100" />
+                        </div>
+                    </div>
+                    <ul class="actions">
+                        <li><input type="submit" value="Open position" class="primary" /></li>
+                    </ul>
+                </form>
+
+                <p th:if="${error}" th:text="${error}" style="color:red;"></p>
+                <p th:if="${result}" th:text="${result}" style="color:green;"></p>
+            </section>
+
+            <footer th:replace="~{fragments/layout :: footer}"></footer>
+        </div>
+    </div>
+    <div th:replace="~{fragments/layout :: sidebar}"></div>
+</div>
+<th:block th:replace="~{fragments/layout :: scripts}"></th:block>
+</body>
+</html>
