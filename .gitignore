@@ -31,3 +31,4 @@ password.txt
 .env
 target/
 .idea/
+.DS_Store
